@@ -3,147 +3,157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#1a1a2e">
-<title>Ilya | Python Developer</title>
+<meta name="theme-color" content="#0b0b0b">
+<title>Ilya — Portfolio</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#1a1a2e;--bg2:#16213e;--card:rgba(255,255,255,0.04);--card-border:rgba(255,255,255,0.08);--card-hover:rgba(255,255,255,0.07);--accent:#4f8cff;--accent2:#6c63ff;--accent-dim:rgba(79,140,255,0.12);--text:#e8e8f0;--text-dim:#8888aa;--text-muted:#555577;--radius:14px;--radius-sm:10px;--shadow:0 4px 24px rgba(0,0,0,0.2);--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif}
+:root{--bg:#0b0b0b;--bg2:#111111;--card:rgba(255,255,255,0.03);--card-hover:rgba(255,255,255,0.06);--border:rgba(255,255,255,0.06);--accent:#e8a070;--accent-dim:rgba(232,160,112,0.12);--text:#f0ece4;--text-dim:#8a8a84;--text-muted:#555555;--radius:14px;--radius-sm:8px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif}
 html,body{height:100%;overflow:hidden}
-body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.6}
 ::selection{background:var(--accent);color:#fff}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--text-muted);border-radius:4px}
 
-/* subtle animated bg */
-body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(79,140,255,0.06) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(108,99,255,0.04) 0%,transparent 50%);pointer-events:none;z-index:0;animation:bgShift 20s ease-in-out infinite alternate}
-@keyframes bgShift{0%{transform:translate(0,0)}100%{transform:translate(-30px,-20px)}}
+/* animated bg blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;opacity:0.25;animation:blobFloat 18s ease-in-out infinite}
+.blob-1{width:400px;height:400px;background:radial-gradient(circle,rgba(232,160,112,0.4),transparent 70%);top:-10%;right:-10%;animation-delay:0s}
+.blob-2{width:350px;height:350px;background:radial-gradient(circle,rgba(200,120,200,0.25),transparent 70%);bottom:-10%;left:-10%;animation-delay:-6s}
+.blob-3{width:250px;height:250px;background:radial-gradient(circle,rgba(232,160,112,0.2),transparent 70%);top:40%;left:50%;animation-delay:-12s}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.08)}50%{transform:translate(-20px,30px) scale(0.95)}75%{transform:translate(30px,20px) scale(1.04)}}
+
+/* particles */
+#particles-canvas{position:fixed;inset:0;pointer-events:none;z-index:0}
 
 .app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:1}
 
-/* Tab Bar */
-.tabbar{position:fixed;bottom:0;left:0;right:0;height:64px;background:rgba(26,26,46,0.92);border-top:1px solid var(--card-border);display:flex;align-items:center;justify-content:space-around;z-index:100;padding:0 8px;padding-bottom:env(safe-area-inset-bottom,0);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
-.tabbar-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;color:var(--text-muted);font-family:var(--font);font-size:10px;font-weight:500;cursor:pointer;padding:4px 16px;transition:all 0.3s;-webkit-tap-highlight-color:transparent;position:relative}
-.tabbar-btn .tab-icon{font-size:20px;line-height:1;transition:all 0.3s}
-.tabbar-btn.active{color:var(--accent)}
-.tabbar-btn.active .tab-icon{transform:translateY(-1px)}
-.tabbar-btn.active::after{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--accent);border-radius:0 0 4px 4px}
-
-/* Page */
+/* page */
 .page{flex:1;overflow-y:auto;overflow-x:hidden;padding:20px 20px 80px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
-.section{display:none;animation:fadeSlide 0.4s ease}
-.section.active{display:block}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* Cards */
-.card{padding:16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--card-border);transition:all 0.3s}
-.card:hover{background:var(--card-hover);border-color:rgba(255,255,255,0.12)}
+/* sections */
+.section{display:none;animation:fadeUp .5s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* scroll progress */
+#scroll-progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:999;width:0;transition:width 50ms linear;box-shadow:0 0 12px rgba(232,160,112,0.3)}
+
+/* tab bar */
+.tabbar{position:fixed;bottom:0;left:0;right:0;height:62px;background:rgba(11,11,11,0.9);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;z-index:100;padding:0 4px;padding-bottom:env(safe-area-inset-bottom,0);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.tabbar-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;color:var(--text-muted);font-family:var(--font);font-size:9px;font-weight:500;cursor:pointer;padding:4px 14px;transition:all .3s;-webkit-tap-highlight-color:transparent;letter-spacing:.5px;text-transform:uppercase}
+.tabbar-btn .tab-icon{font-size:20px;line-height:1;transition:all .3s}
+.tabbar-btn.active{color:var(--accent)}
+.tabbar-btn.active .tab-icon{transform:translateY(-2px)}
 
 /* HOME */
-.home{display:flex;flex-direction:column;align-items:center;padding:24px 0 10px;text-align:center}
-.avatar-wrap{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#fff;margin-bottom:14px;position:relative;box-shadow:0 0 40px rgba(79,140,255,0.2)}
-.avatar-wrap::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(79,140,255,0.2);animation:avatarPulse 3s ease-in-out infinite}
-@keyframes avatarPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.04)}}
-.name{font-size:26px;font-weight:700;color:var(--text);margin-bottom:2px}
-.role{font-size:14px;color:var(--text-dim);margin-bottom:16px}
-.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--accent);margin-bottom:20px}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:statusPulse 2s ease-in-out infinite}
-@keyframes statusPulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.home{display:flex;flex-direction:column;align-items:center;padding:28px 0 10px;text-align:center}
+.avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#d48c60);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#0b0b0b;margin-bottom:14px;box-shadow:0 0 40px rgba(232,160,112,0.2)}
+.name{font-size:28px;font-weight:700;color:var(--text);margin-bottom:2px}
+.role{font-size:14px;color:var(--text-dim);margin-bottom:6px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);margin-bottom:20px;padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card)}
+.status-dot{width:5px;height:5px;border-radius:50%;background:#4ade80;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:13px 32px;border-radius:30px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:600;font-size:14px;border:none;cursor:pointer;text-decoration:none;transition:all 0.3s;box-shadow:0 4px 20px rgba(79,140,255,0.3)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,140,255,0.4)}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:30px;background:var(--accent);color:#0b0b0b;font-weight:600;font-size:14px;border:none;cursor:pointer;text-decoration:none;transition:all .3s}
+.btn-primary:hover{background:#d48c60;transform:translateY(-2px);box-shadow:0 6px 20px rgba(232,160,112,0.3)}
+.btn-primary img{width:16px;height:16px}
 .btn-primary:active{transform:translateY(0)}
-.btn-primary img{width:16px;height:16px;filter:brightness(0) invert(1)}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:24px}
-.stat{padding:12px 8px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--card-border);text-align:center}
-.stat-num{font-size:20px;font-weight:700;color:var(--accent)}
-.stat-label{font-size:10px;color:var(--text-dim);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:24px;padding:16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border)}
+.stat{text-align:center}
+.stat-num{font-size:22px;font-weight:700;color:var(--accent)}
+.stat-label{font-size:10px;color:var(--text-dim);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
 
-.tech-stack{display:flex;gap:12px;margin-top:20px;padding:12px 20px;border-radius:30px;background:var(--card);border:1px solid var(--card-border)}
-.tech-stack span{font-size:22px;opacity:0.7;transition:all 0.3s}
-.tech-stack span:hover{opacity:1;transform:translateY(-2px)}
+.tech{display:flex;gap:10px;margin-top:18px}
+.tech span{font-size:22px;opacity:.6;transition:all .3s}
+.tech span:hover{opacity:1;transform:translateY(-3px)}
 
-/* Section header */
-.section-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.section-header h2{font-size:18px;font-weight:700;color:var(--text)}
-.section-header .line{flex:1;height:1px;background:var(--card-border)}
+/* section header */
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.section-header h2{font-size:17px;font-weight:700;color:var(--text);white-space:nowrap}
+.section-header hr{flex:1;height:1px;background:var(--border);border:none}
 
-/* PROJECT FILTERS */
-.project-filters{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
-.project-filters::-webkit-scrollbar{height:2px;background:transparent}
-.filter-btn{padding:6px 14px;font-size:12px;font-weight:500;border:1px solid var(--card-border);background:var(--card);color:var(--text-dim);cursor:pointer;transition:all 0.3s;white-space:nowrap;border-radius:20px;font-family:var(--font)}
-.filter-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
-.filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+/* project filters */
+.filters{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.filters::-webkit-scrollbar{height:2px;background:transparent}
+.filter-btn{padding:5px 14px;font-size:12px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .3s;white-space:nowrap;border-radius:20px;font-family:var(--font)}
+.filter-btn.active{background:var(--accent-dim);color:var(--accent);border-color:rgba(232,160,112,0.2)}
+.filter-btn:hover{color:var(--text);border-color:var(--text-muted)}
 
-/* PROJECT GRID */
-.project-grid{display:flex;flex-direction:column;gap:10px}
-.project-card{display:flex;align-items:center;gap:14px;padding:14px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--card-border);text-decoration:none;color:inherit;transition:all 0.3s;cursor:pointer}
-.project-card:hover{border-color:rgba(79,140,255,0.2);transform:translateX(4px);background:var(--card-hover)}
-.project-card-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.project-card-body{flex:1;min-width:0}
-.project-card-title{font-size:14px;font-weight:600;color:var(--text)}
-.project-card-desc{font-size:12px;color:var(--text-dim);margin-top:1px}
-.project-card-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
-.project-tag{font-size:9px;padding:2px 8px;border-radius:10px;background:var(--accent-dim);color:var(--accent);font-weight:500}
-.project-card-arrow{color:var(--text-muted);font-size:18px;transition:all 0.3s}
-.project-card:hover .project-card-arrow{color:var(--accent);transform:translateX(4px)}
+/* projects */
+.project-grid{display:flex;flex-direction:column;gap:8px}
+.project-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--border);text-decoration:none;color:inherit;transition:all .3s}
+.project-card:hover{background:var(--card-hover);border-color:rgba(255,255,255,0.1);transform:translateX(4px)}
+.project-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.project-body{flex:1;min-width:0}
+.project-title{font-size:14px;font-weight:600;color:var(--text)}
+.project-desc{font-size:11px;color:var(--text-dim);margin-top:1px}
+.project-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.project-tag{font-size:9px;padding:2px 8px;border-radius:10px;background:var(--accent-dim);color:var(--accent)}
+.project-arrow{color:var(--text-muted);font-size:16px;transition:all .3s}
+.project-card:hover .project-arrow{color:var(--accent);transform:translateX(4px)}
 
-/* SERVICES */
-.services-grid{display:flex;flex-direction:column;gap:10px}
-.service-card{padding:18px;border-radius:var(--radius);background:var(--card);border:1px solid var(--card-border);transition:all 0.3s;text-decoration:none;color:inherit;display:block}
-.service-card:hover{border-color:rgba(79,140,255,0.15);transform:translateY(-2px);background:var(--card-hover)}
-.service-card.featured{background:linear-gradient(135deg,rgba(79,140,255,0.06),rgba(108,99,255,0.04));border-color:rgba(79,140,255,0.15)}
-.service-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.service-card-left{display:flex;align-items:center;gap:12px}
-.service-card-icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:20px}
-.service-card-title{font-size:15px;font-weight:600;color:var(--text)}
-.service-card-price{font-size:20px;font-weight:700;color:var(--accent)}
+/* services */
+.services-grid{display:flex;flex-direction:column;gap:8px}
+.service-card{padding:18px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);transition:all .3s}
+.service-card:hover{background:var(--card-hover);border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+.service-card.featured{border-color:rgba(232,160,112,0.15)}
+.service-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.service-left{display:flex;align-items:center;gap:12px}
+.service-icon{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;font-size:20px}
+.service-name{font-size:15px;font-weight:600;color:var(--text)}
+.service-price{font-size:20px;font-weight:700;color:var(--accent)}
 .service-features{display:flex;flex-direction:column;gap:3px;margin-bottom:12px}
 .service-feature{font-size:12px;color:var(--text-dim);display:flex;align-items:center;gap:6px}
 .service-feature::before{content:'✓';color:var(--accent);font-weight:700}
-.service-btn{width:100%;padding:9px;border-radius:20px;background:transparent;border:1px solid var(--card-border);color:var(--text-dim);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.3s;font-family:var(--font)}
-.service-btn:hover{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
-.featured-badge{display:inline-block;font-size:9px;padding:2px 10px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:700;margin-left:8px;letter-spacing:0.5px}
+.service-btn{width:100%;padding:8px;border-radius:20px;background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:12px;font-weight:500;cursor:pointer;transition:all .3s;font-family:var(--font)}
+.service-btn:hover{background:var(--accent-dim);color:var(--accent);border-color:rgba(232,160,112,0.2)}
+.best-badge{display:inline-block;font-size:9px;padding:2px 8px;border-radius:10px;background:var(--accent);color:#0b0b0b;font-weight:700;margin-left:6px;letter-spacing:.3px;vertical-align:middle}
 
-/* CONTACTS */
-.contacts{display:flex;flex-direction:column;align-items:center;padding:16px 0;text-align:center}
-.contact-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:32px;color:#fff;margin-bottom:12px;box-shadow:0 0 30px rgba(79,140,255,0.15)}
+/* contacts */
+.contacts{display:flex;flex-direction:column;align-items:center;padding:20px 0;text-align:center}
+.contact-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#d48c60);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#0b0b0b;margin-bottom:12px;box-shadow:0 0 30px rgba(232,160,112,0.15)}
 .contact-name{font-size:22px;font-weight:700;color:var(--text)}
 .contact-role{font-size:13px;color:var(--text-dim);margin-bottom:20px}
 
-.contact-list{display:flex;flex-direction:column;gap:10px;width:100%;max-width:340px}
-.contact-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--card-border);text-decoration:none;color:var(--text);transition:all 0.3s}
-.contact-item:hover{border-color:rgba(79,140,255,0.2);transform:translateX(4px);background:var(--card-hover)}
-.contact-item-icon{width:36px;height:36px;border-radius:8px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.contact-item-icon img{width:18px;height:18px}
-.contact-item-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px}
+.contact-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}
+.contact-item{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--border);text-decoration:none;color:var(--text);transition:all .3s}
+.contact-item:hover{background:var(--card-hover);border-color:rgba(255,255,255,0.1);transform:translateX(4px)}
+.contact-item-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.contact-item-icon img{width:20px;height:20px}
+.contact-item-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px}
 .contact-item-value{font-size:14px;color:var(--text);font-weight:500}
 .contact-item:hover .contact-item-value{color:var(--accent)}
 
-.social-row{display:flex;gap:10px;margin-top:16px}
-.social-link{width:42px;height:42px;border-radius:12px;background:var(--card);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.3s}
-.social-link:hover{background:var(--contact-hover,var(--card-hover));border-color:rgba(79,140,255,0.2);transform:translateY(-2px)}
-.social-link img{width:20px;height:20px;opacity:0.5;transition:all 0.3s}
-.social-link:hover img{opacity:0.8}
+.social-row{display:flex;gap:10px;margin-top:20px}
+.social-link{width:42px;height:42px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .3s}
+.social-link img{width:20px;height:20px;opacity:.5;transition:all .3s}
+.social-link:hover{background:var(--card-hover);border-color:rgba(255,255,255,0.12);transform:translateY(-2px)}
+.social-link:hover img{opacity:.8}
 
 @media(min-width:500px){.project-grid,.services-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
 </style>
 </head>
 <body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+<canvas id="particles-canvas"></canvas>
+<div id="scroll-progress"></div>
+
 <div class="app">
 <div class="page" id="page">
 
 <!-- HOME -->
 <div class="section active" id="s-home">
   <div class="home">
-    <div class="avatar-wrap">IL</div>
-    <div class="home-name">Ilya</div>
+    <div class="avatar">IL</div>
+    <div class="name">Ilya</div>
     <div class="role">Python Developer &amp; Media Creator</div>
     <div class="status"><span class="status-dot"></span> open to work</div>
     <a href="https://t.me/biggesttroll" target="_blank" class="btn-primary">
-      <img src="data:image/png;base64,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" alt="">
-      Contact me
+      <img src="icons/telegram.png" alt="TG"> Contact me
     </a>
     <div class="stats">
       <div class="stat"><div class="stat-num">47+</div><div class="stat-label">Projects</div></div>
@@ -151,16 +161,16 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Ontime</div></div>
       <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Years</div></div>
     </div>
-    <div class="tech-stack">
-      <span>🐍</span><span>🤖</span><span>⚡</span><span>🎬</span><span>📊</span>
+    <div class="tech">
+      <span>🐍</span><span>🤖</span><span>⚡</span><span>🎬</span><span>📊</span><span>🌐</span>
     </div>
   </div>
 </div>
 
 <!-- PROJECTS -->
 <div class="section" id="s-projects">
-  <div class="section-header"><h2>Projects</h2><div class="line"></div></div>
-  <div class="project-filters" id="filters">
+  <div class="section-header"><h2>Projects</h2><hr></div>
+  <div class="filters" id="filters">
     <button class="filter-btn active" data-filter="all">All</button>
     <button class="filter-btn" data-filter="bots">Bots</button>
     <button class="filter-btn" data-filter="parsers">Parsers</button>
@@ -171,7 +181,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 
 <!-- SERVICES -->
 <div class="section" id="s-services">
-  <div class="section-header"><h2>Services</h2><div class="line"></div></div>
+  <div class="section-header"><h2>Services</h2><hr></div>
   <div class="services-grid" id="services-grid"></div>
 </div>
 
@@ -183,11 +193,11 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
     <div class="contact-role">Python Developer &amp; Media Creator</div>
     <div class="contact-list">
       <a href="https://t.me/biggesttroll" target="_blank" class="contact-item">
-        <div class="contact-item-icon"><img src="data:image/png;base64,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" alt="Telegram"></div>
+        <div class="contact-item-icon"><img src="icons/telegram.png" alt="Telegram"></div>
         <div><div class="contact-item-label">Telegram</div><div class="contact-item-value">@biggesttroll</div></div>
       </a>
       <a href="https://github.com/pipupip" target="_blank" class="contact-item">
-        <div class="contact-item-icon"><img src="data:image/png;base64,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" alt="GitHub"></div>
+        <div class="contact-item-icon"><img src="icons/github.png" alt="GitHub"></div>
         <div><div class="contact-item-label">GitHub</div><div class="contact-item-value">/pipupip</div></div>
       </a>
       <a href="mailto:kokpupsik@gmail.com" class="contact-item">
@@ -196,8 +206,8 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
       </a>
     </div>
     <div class="social-row">
-      <a href="https://t.me/biggesttroll" target="_blank" class="social-link"><img src="data:image/png;base64,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" alt="Telegram"></a>
-      <a href="https://github.com/pipupip" target="_blank" class="social-link"><img src="data:image/png;base64,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" alt="GitHub"></a>
+      <a href="https://t.me/biggesttroll" target="_blank" class="social-link"><img src="icons/telegram.png" alt="TG"></a>
+      <a href="https://github.com/pipupip" target="_blank" class="social-link"><img src="icons/github.png" alt="GH"></a>
       <a href="mailto:kokpupsik@gmail.com" class="social-link" style="font-size:20px">✉️</a>
     </div>
   </div>
@@ -206,7 +216,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 </div>
 
 <!-- TAB BAR -->
-<nav class="tabbar" id="tabbar">
+<nav class="tabbar">
   <button class="tabbar-btn active" data-tab="home"><span class="tab-icon">🏠</span><span>Home</span></button>
   <button class="tabbar-btn" data-tab="projects"><span class="tab-icon">💻</span><span>Projects</span></button>
   <button class="tabbar-btn" data-tab="services"><span class="tab-icon">⚡</span><span>Services</span></button>
@@ -218,86 +228,103 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 // Telegram WebApp
 if(window.Telegram&&window.Telegram.WebApp){var tg=window.Telegram.WebApp;tg.expand();tg.ready()}
 
-// Project data
+// PARTICLES
+(function(){
+  var c=document.getElementById('particles-canvas'),ctx=c.getContext('2d');
+  var W,H,parts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  var n=Math.min(50,Math.floor(W*H/15000));
+  for(var i=0;i<n;i++)parts.push({x:Math.random()*W,y:Math.random()*H,dx:(Math.random()-.5)*.5,dy:(Math.random()-.5)*.5,r:Math.random()*2+.5,o:Math.random()*.4+.1});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i];p.x+=p.dx;p.y+=p.dy;
+      if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(232,160,112,'+p.o+')';ctx.fill();
+      for(var j=i+1;j<parts.length;j++){
+        var p2=parts[j],dx=p.x-p2.x,dy=p.y-p2.y,dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<120){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p2.x,p2.y);ctx.strokeStyle='rgba(232,160,112,'+(.06*(1-dist/120))+')';ctx.lineWidth=.5;ctx.stroke()}
+      }
+    }
+    requestAnimationFrame(draw)
+  }
+  draw()
+})();
+
+// SCROLL PROGRESS
+(function(){
+  var bar=document.getElementById('scroll-progress'),page=document.getElementById('page');
+  page.addEventListener('scroll',function(){var h=page.scrollHeight-page.clientHeight;bar.style.width=(page.scrollTop/h*100)+'%'})
+})();
+
+// PROJECT DATA
 var projects=[
-  {title:'Appointment Bot',desc:'Booking bot for barbershops & salons',emoji:'📅',cat:'bots',tags:['aiogram','FSM'],url:'https://github.com/pipupip/appointment-bot'},
-  {title:'Digital Shop',desc:'Telegram store for digital goods',emoji:'🛒',cat:'bots',tags:['aiogram','SQLite'],url:'https://github.com/pipupip/digital-shop-bot'},
-  {title:'Booking Bot',desc:'Full-featured booking system',emoji:'🔧',cat:'bots',tags:['aiogram','FSM','Reminders'],url:'https://github.com/pipupip/bookingbot'},
-  {title:'Admin Panel',desc:'Web dashboard for Telegram bots',emoji:'⚙️',cat:'web',tags:['FastAPI','Jinja2'],url:'https://github.com/pipupip/bot-admin-panel'},
-  {title:'Classifieds Parser',desc:'Ad monitoring with alerts',emoji:'📊',cat:'parsers',tags:['BS4','SQLite'],url:'https://github.com/pipupip/classifieds-parser'},
-  {title:'Advanced Parser',desc:'Multi-platform async parser',emoji:'🤖',cat:'parsers',tags:['Async','aiohttp'],url:'https://github.com/pipupip/parser-advanced'},
-  {title:'NextGen AI',desc:'AI agency corporate site',emoji:'🌐',cat:'web',tags:['HTML','CSS','JS'],url:'https://github.com/pipupip/nextgen-ai'},
-  {title:'Portfolio Site',desc:'Developer portfolio website',emoji:'🎨',cat:'web',tags:['HTML','CSS','JS'],url:'https://github.com/pipupip/portfolio'}
+  {title:'Appointment Bot',desc:'Booking bot for barbershops & salons',icon:'📅',cat:'bots',tags:['aiogram','FSM'],url:'https://github.com/pipupip/appointment-bot'},
+  {title:'Digital Shop',desc:'Telegram store for digital goods',icon:'🛒',cat:'bots',tags:['aiogram','SQLite'],url:'https://github.com/pipupip/digital-shop-bot'},
+  {title:'Booking Bot',desc:'Full-featured booking system',icon:'🔧',cat:'bots',tags:['aiogram','FSM','Reminders'],url:'https://github.com/pipupip/bookingbot'},
+  {title:'Admin Panel',desc:'Web dashboard for Telegram bots',icon:'⚙️',cat:'web',tags:['FastAPI','Jinja2'],url:'https://github.com/pipupip/bot-admin-panel'},
+  {title:'Classifieds Parser',desc:'Ad monitoring with Telegram alerts',icon:'📊',cat:'parsers',tags:['BS4','SQLite'],url:'https://github.com/pipupip/classifieds-parser'},
+  {title:'Advanced Parser',desc:'Multi-platform async parser framework',icon:'🤖',cat:'parsers',tags:['Async','aiohttp'],url:'https://github.com/pipupip/parser-advanced'},
+  {title:'NextGen AI',desc:'AI agency corporate website',icon:'🌐',cat:'web',tags:['HTML','CSS','JS'],url:'https://github.com/pipupip/nextgen-ai'},
+  {title:'Portfolio',desc:'Developer portfolio website',icon:'🎨',cat:'web',tags:['HTML','CSS','JS'],url:'https://github.com/pipupip/portfolio'}
 ];
 
 var services=[
-  {title:'Telegram Bot',price:'$200',emoji:'🤖',features:['Booking system','Admin panel','24/7 support'],featured:false},
-  {title:'Data Parser',price:'$150',emoji:'📊',features:['Custom selectors','Multi-format export','Auto-updates'],featured:false},
-  {title:'Website',price:'$300',emoji:'🌐',features:['Responsive design','SEO optimized','Form integration'],featured:false},
-  {title:'Quick Start',price:'$500',emoji:'🚀',features:['Website + Bot','Video promo','Priority support'],featured:true}
+  {title:'Telegram Bot',price:'$200',icon:'🤖',features:['Booking system','Admin panel','24/7 support'],featured:false},
+  {title:'Data Parser',price:'$150',icon:'📊',features:['Custom selectors','Multi-format export','Auto-updates'],featured:false},
+  {title:'Website',price:'$300',icon:'🌐',features:['Responsive design','SEO optimized','Form integration'],featured:false},
+  {title:'Quick Start',price:'$500',icon:'🚀',features:['Website + Bot','Video promo','Priority support'],featured:true}
 ];
 
-// Render projects
+// RENDER
 (function(){
   var grid=document.getElementById('project-grid');
   function render(filter){
-    var html='';
+    var h='';
     projects.forEach(function(p,i){
       if(filter!=='all'&&p.cat!==filter)return;
-      html+='<a href="'+p.url+'" target="_blank" class="project-card" style="animation:fadeSlide 0.4s ease '+(i*0.04)+'s both">'+
-        '<div class="project-card-icon">'+p.emoji+'</div>'+
-        '<div class="project-card-body">'+
-          '<div class="project-card-title">'+p.title+'</div>'+
-          '<div class="project-card-desc">'+p.desc+'</div>'+
-          '<div class="project-card-tags">'+p.tags.map(function(t){return'<span class="project-tag">'+t+'</span>'}).join('')+'</div>'+
-        '</div>'+
-        '<span class="project-card-arrow">→</span>'+
-      '</a>';
+      h+='<a href="'+p.url+'" target="_blank" class="project-card">'+
+        '<div class="project-icon">'+p.icon+'</div>'+
+        '<div class="project-body"><div class="project-title">'+p.title+'</div><div class="project-desc">'+p.desc+'</div>'+
+        '<div class="project-tags">'+p.tags.map(function(t){return'<span class="project-tag">'+t+'</span>'}).join('')+'</div></div>'+
+        '<span class="project-arrow">→</span></a>'
     });
-    grid.innerHTML=html||'<div style="text-align:center;padding:40px;color:var(--text-dim)">Nothing here</div>';
+    grid.innerHTML=h||'<div style="text-align:center;padding:40px;color:var(--text-dim)">No projects</div>'
   }
   render('all');
-  document.querySelectorAll('.filter-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});
-      btn.classList.add('active');
-      render(btn.getAttribute('data-filter'));
-    });
-  });
+  document.querySelectorAll('.filter-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('.filter-btn').forEach(function(x){x.classList.remove('active')});
+      b.classList.add('active');render(b.getAttribute('data-filter'))
+    })
+  })
 })();
 
-// Render services
 (function(){
-  var grid=document.getElementById('services-grid');
-  var html='';
+  var grid=document.getElementById('services-grid'),h='';
   services.forEach(function(s){
-    html+='<div class="service-card'+(s.featured?' featured':'')+'">'+
-      '<div class="service-card-top">'+
-        '<div class="service-card-left"><div class="service-card-icon">'+s.emoji+'</div><div><div class="service-card-title">'+s.title+(s.featured?' <span class="featured-badge">BEST</span>':'')+'</div></div></div>'+
-        '<div class="service-card-price">'+s.price+'</div>'+
-      '</div>'+
+    h+='<div class="service-card'+(s.featured?' featured':'')+'">'+
+      '<div class="service-top"><div class="service-left"><div class="service-icon">'+s.icon+'</div><div><div class="service-name">'+s.title+(s.featured?' <span class="best-badge">BEST</span>':'')+'</div></div></div>'+
+      '<div class="service-price">'+s.price+'</div></div>'+
       '<div class="service-features">'+s.features.map(function(f){return'<div class="service-feature">'+f+'</div>'}).join('')+'</div>'+
-      '<button class="service-btn" onclick="window.open(\'https://t.me/biggesttroll\',\'_blank\')">Order →</button>'+
-    '</div>';
+      '<button class="service-btn" onclick="window.open(\'https://t.me/biggesttroll\',\'_blank\')">Order →</button></div>'
   });
-  grid.innerHTML=html;
+  grid.innerHTML=h
 })();
 
-// Tab navigation
+// TABS
 (function(){
-  var tabs=document.querySelectorAll('.tabbar-btn');
-  var map={home:'s-home',projects:'s-projects',services:'s-services',contacts:'s-contacts'};
-  tabs.forEach(function(tab){
-    tab.addEventListener('click',function(){
-      tabs.forEach(function(t){t.classList.remove('active')});
-      tab.classList.add('active');
-      var id=map[tab.getAttribute('data-tab')];
-      if(!id)return;
+  var tabs=document.querySelectorAll('.tabbar-btn'),map={home:'s-home',projects:'s-projects',services:'s-services',contacts:'s-contacts'};
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){
+      tabs.forEach(function(x){x.classList.remove('active')});t.classList.add('active');
+      var id=map[t.getAttribute('data-tab')];if(!id)return;
       document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active')});
-      document.getElementById(id).classList.add('active');
-      document.getElementById('page').scrollTop=0;
-    });
-  });
+      document.getElementById(id).classList.add('active');document.getElementById('page').scrollTop=0
+    })
+  })
 })();
 </script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
