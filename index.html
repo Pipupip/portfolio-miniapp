@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Ilya — Portfolio</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--bg-card:#14141f;--bg-card-hover:#1c1c2e;--surface:#1a1a2e;--accent:#e8a070;--accent-dim:#c4835a;--text:#f0ece4;--text-dim:#8884a0;--text-muted:#5c5a6e;--border:#2a2a3e;--radius:16px;--radius-sm:10px;--shadow:0 8px 32px rgba(0,0,0,.5);--transition:all .35s cubic-bezier(.4,0,.2,1)}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.page{flex:1;overflow-y:auto;overflow-x:hidden;padding:24px 20px 90px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.page::-webkit-scrollbar{width:4px}
+.page::-webkit-scrollbar-track{background:transparent}
+.page::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* Tab bar */
+.tabbar{position:fixed;bottom:0;left:0;right:0;height:70px;background:var(--bg-card);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;z-index:100;padding:0 8px;padding-bottom:env(safe-area-inset-bottom,0);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.tabbar-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--text-muted);font-size:10px;font-weight:500;cursor:pointer;padding:6px 12px;border-radius:12px;transition:var(--transition);position:relative;min-width:60px;letter-spacing:.3px;-webkit-tap-highlight-color:transparent;user-select:none}
+.tabbar-btn .tab-icon{font-size:22px;line-height:1;transition:var(--transition)}
+.tabbar-btn .tab-label{transition:var(--transition)}
+.tabbar-btn.active{color:var(--accent)}
+.tabbar-btn.active .tab-icon{transform:translateY(-2px)}
+.tabbar-btn.active::after{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:24px;height:3px;border-radius:0 0 4px 4px;background:var(--accent)}
+
+/* Sections */
+.section{display:none;animation:fadeIn .4s ease forwards}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes typewriter{from{width:0}to{width:100%}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Home */
+.profile{display:flex;flex-direction:column;align-items:center;padding:20px 0 10px;animation:slideUp .6s ease}
+.avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dim));display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;color:#0a0a0f;box-shadow:0 0 40px rgba(232,160,112,.25);margin-bottom:16px;position:relative;overflow:hidden}
+.avatar::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.1)}
+.status-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:var(--surface);border:1px solid var(--border);font-size:12px;color:var(--text-dim);margin-bottom:8px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+.name{font-size:32px;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.typewriter-wrap{height:28px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.typewriter{font-size:16px;color:var(--text-dim);overflow:hidden;white-space:nowrap;border-right:2px solid var(--accent);animation:blink .8s step-end infinite;display:inline-block;max-width:100%}
+.telegram-link{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);text-decoration:none;font-size:13px;padding:6px 16px;border-radius:20px;background:var(--surface);border:1px solid var(--border);transition:var(--transition);margin-bottom:20px}
+.telegram-link:hover{color:var(--accent);border-color:var(--accent)}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:14px 36px;border-radius:30px;background:linear-gradient(135deg,var(--accent),var(--accent-dim));color:#0a0a0f;font-weight:600;font-size:15px;border:none;cursor:pointer;text-decoration:none;transition:var(--transition);box-shadow:0 4px 20px rgba(232,160,112,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(232,160,112,.4)}
+.btn-primary:active{transform:translateY(0)}
+.stats{display:flex;gap:24px;margin-top:28px;padding:16px 24px;border-radius:var(--radius);background:var(--bg-card);border:1px solid var(--border);animation:slideUp .8s ease}
+.stat-item{text-align:center;flex:1}
+.stat-value{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+/* Projects */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-top:8px}
+.section-title{font-size:22px;font-weight:700}
+.section-subtitle{font-size:13px;color:var(--text-dim)}
+.tabs{display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 18px;border-radius:20px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-dim);font-size:13px;font-weight:500;cursor:pointer;transition:var(--transition);-webkit-tap-highlight-color:transparent;user-select:none}
+.tab:hover{border-color:var(--text-muted)}
+.tab.active{background:var(--accent);color:#0a0a0f;border-color:var(--accent);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-decoration:none;color:var(--text);display:flex;align-items:flex-start;gap:14px;transition:var(--transition);cursor:pointer}
+.project-card:hover{background:var(--bg-card-hover);border-color:var(--accent);transform:translateX(4px)}
+.project-card:active{transform:translateX(2px)}
+.project-icon{width:44px;height:44px;border-radius:12px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.project-info{flex:1;min-width:0}
+.project-name{font-size:14px;font-weight:600;margin-bottom:3px}
+.project-desc{font-size:12px;color:var(--text-dim);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.project-tech{display:inline-block;font-size:10px;color:var(--text-muted);margin-top:4px;padding:2px 8px;border-radius:6px;background:var(--surface)}
+.project-arrow{color:var(--text-muted);font-size:16px;flex-shrink:0;align-self:center;transition:var(--transition)}
+.project-card:hover .project-arrow{color:var(--accent);transform:translateX(4px)}
+.empty-tab{padding:40px 20px;text-align:center;color:var(--text-muted);font-size:14px}
+
+/* Services */
+.services-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.service-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;transition:var(--transition)}
+.service-card:hover{background:var(--bg-card-hover);border-color:var(--accent)}
+.service-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-dim));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.service-info{flex:1}
+.service-name{font-size:15px;font-weight:600;margin-bottom:2px}
+.service-desc{font-size:12px;color:var(--text-dim)}
+.service-price{font-size:18px;font-weight:700;color:var(--accent)}
+.btn-order{display:inline-flex;align-items:center;gap:4px;padding:8px 18px;border-radius:20px;background:var(--accent);color:#0a0a0f;font-size:12px;font-weight:600;border:none;cursor:pointer;text-decoration:none;transition:var(--transition);flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.btn-order:hover{transform:scale(1.05);box-shadow:0 4px 16px rgba(232,160,112,.35)}
+.btn-order:active{transform:scale(.97)}
+
+/* Contacts */
+.contact-list{display:flex;flex-direction:column;gap:10px}
+.contact-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-sm);background:var(--bg-card);border:1px solid var(--border);text-decoration:none;color:var(--text);transition:var(--transition)}
+.contact-item:hover{background:var(--bg-card-hover);border-color:var(--accent);transform:translateX(4px)}
+.contact-item:active{transform:translateX(2px)}
+.contact-icon{width:40px;height:40px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.contact-info{flex:1}
+.contact-label{font-size:11px;color:var(--text-muted);margin-bottom:1px}
+.contact-value{font-size:14px;font-weight:500}
+.contact-action{color:var(--text-muted);font-size:14px;transition:var(--transition)}
+.contact-item:hover .contact-action{color:var(--accent);transform:translateX(4px)}
+.contact-cta{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.contact-cta .btn-primary{justify-content:center}
+
+/* Responsive */
+@media(min-width:480px){.grid{grid-template-columns:1fr 1fr}.services-grid{grid-template-columns:1fr 1fr}.page{padding:28px 24px 90px}}
+@media(min-width:768px){.grid{grid-template-columns:1fr 1fr 1fr}.services-grid{grid-template-columns:1fr 1fr}.page{padding:32px 32px 90px;max-width:720px;margin:0 auto}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Pages -->
+  <div class="page" id="page">
+
+    <!-- Home -->
+    <div class="section active" id="section-home">
+      <div class="profile">
+        <div class="avatar">P</div>
+        <div class="status-badge"><span class="status-dot"></span>Available for work</div>
+        <h1 class="name">Ilya</h1>
+        <div class="typewriter-wrap">
+          <span class="typewriter" id="typewriter"></span>
+        </div>
+        <a class="telegram-link" href="https://t.me/biggesttroll" target="_blank">
+          <span>@biggesttroll</span>
+        </a>
+        <a class="btn-primary" href="https://github.com/pipupip/portfolio" target="_blank">
+          Open Portfolio
+          <span>→</span>
+        </a>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value">7+</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">3+</div>
+            <div class="stat-label">Years</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">12+</div>
+            <div class="stat-label">Clients</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="section" id="section-projects">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Projects</div>
+          <div class="section-subtitle">Things I've built</div>
+        </div>
+      </div>
+      <div class="tabs" id="project-tabs">
+        <div class="tab active" data-cat="bots">🤖 Bots</div>
+        <div class="tab" data-cat="parsers">🔍 Parsers</div>
+        <div class="tab" data-cat="web">🌐 Web</div>
+        <div class="tab" data-cat="video">🎬 Video</div>
+      </div>
+      <div class="grid" id="projects-grid"></div>
+    </div>
+
+    <!-- Services -->
+    <div class="section" id="section-services">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Services</div>
+          <div class="section-subtitle">What I can do for you</div>
+        </div>
+      </div>
+      <div class="services-grid" id="services-grid"></div>
+    </div>
+
+    <!-- Contacts -->
+    <div class="section" id="section-contacts">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Contacts</div>
+          <div class="section-subtitle">Let's work together</div>
+        </div>
+      </div>
+      <div class="contact-list" id="contact-list"></div>
+      <div class="contact-cta">
+        <a class="btn-primary" href="https://t.me/biggesttroll" target="_blank">
+          💬 Contact me
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tab Bar -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tabbar-btn active" data-section="home">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">Home</span>
+    </button>
+    <button class="tabbar-btn" data-section="projects">
+      <span class="tab-icon">💻</span>
+      <span class="tab-label">Projects</span>
+    </button>
+    <button class="tabbar-btn" data-section="services">
+      <span class="tab-icon">💰</span>
+      <span class="tab-label">Services</span>
+    </button>
+    <button class="tabbar-btn" data-section="contacts">
+      <span class="tab-icon">📞</span>
+      <span class="tab-label">Contacts</span>
+    </button>
+  </nav>
+
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Telegram WebApp
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    tg.expand();
+    tg.backgroundColor = '#0a0a0f';
+    if (tg.colorScheme === 'light') {
+      document.documentElement.style.setProperty('--bg', '#f5f3f0');
+      document.documentElement.style.setProperty('--bg-card', '#ffffff');
+      document.documentElement.style.setProperty('--bg-card-hover', '#faf8f5');
+      document.documentElement.style.setProperty('--surface', '#f0ece4');
+      document.documentElement.style.setProperty('--text', '#1a1a2e');
+      document.documentElement.style.setProperty('--text-dim', '#5c5a6e');
+      document.documentElement.style.setProperty('--text-muted', '#aaa8b8');
+      document.documentElement.style.setProperty('--border', '#e0dcd4');
+    }
+  }
+
+  // Data
+  const projectsData = {
+    bots: [
+      { name: 'Appointment Bot', desc: 'Telegram bot for barbershop booking with calendar integration', tech: 'aiogram', icon: '📅', repo: 'appointment-bot' },
+      { name: 'Digital Shop', desc: 'Telegram digital goods store with payment processing', tech: 'aiogram', icon: '🛍️', repo: 'digital-shop' },
+      { name: 'Booking Bot', desc: 'Professional booking system with admin panel', tech: 'aiogram', icon: '📋', repo: 'booking-bot' }
+    ],
+    parsers: [
+      { name: 'Classifieds Parser', desc: 'Ad board monitoring and data extraction tool', tech: 'BeautifulSoup', icon: '🔍', repo: 'classifieds-parser' }
+    ],
+    web: [
+      { name: 'Admin Panel', desc: 'Web admin dashboard with analytics and user management', tech: 'FastAPI', icon: '📊', repo: 'admin-panel' },
+      { name: 'NextGen AI', desc: 'AI agency landing page with modern design', tech: 'HTML/CSS/JS', icon: '🤖', repo: 'nextgen-ai' },
+      { name: 'Portfolio', desc: 'Developer portfolio site with dark theme', tech: 'HTML/CSS/JS', icon: '⚡', repo: 'portfolio' }
+    ],
+    video: [
+      { name: 'EditFlow', desc: 'Automated video editing pipeline with FFmpeg', tech: 'FFmpeg/Python', icon: '🎬', repo: 'editflow' }
+    ]
+  };
+
+  const servicesData = [
+    { name: 'Telegram Bot', desc: 'Custom bot with any functionality', price: 'from $200', icon: '🤖' },
+    { name: 'Parser', desc: 'Web scraping & data collection', price: 'from $150', icon: '🔍' },
+    { name: 'Website', desc: 'Landing page or web app', price: 'from $300', icon: '🌐' },
+    { name: 'Quick Start', desc: 'Full package — bot + site + parser', price: 'from $500', icon: '🚀' }
+  ];
+
+  const contactsData = [
+    { label: 'Telegram', value: '@biggesttroll', icon: '✈️', href: 'https://t.me/biggesttroll' },
+    { label: 'GitHub', value: 'pipupip', icon: '💻', href: 'https://github.com/pipupip' },
+    { label: 'Email', value: 'kokpupsik@gmail.com', icon: '📧', href: 'mailto:kokpupsik@gmail.com' }
+  ];
+
+  // Typewriter
+  const roles = ['Python Developer', 'Media Creator', 'Bot Developer', 'Open Source Enthusiast'];
+  let roleIndex = 0, charIndex = 0, isDeleting = false;
+  const twEl = document.getElementById('typewriter');
+
+  function typeEffect() {
+    const current = roles[roleIndex];
+    if (!isDeleting) {
+      twEl.textContent = current.substring(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === current.length) {
+        isDeleting = true;
+        setTimeout(typeEffect, 2000);
+        return;
+      }
+      setTimeout(typeEffect, 80);
+    } else {
+      twEl.textContent = current.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        isDeleting = false;
+        roleIndex = (roleIndex + 1) % roles.length;
+        setTimeout(typeEffect, 400);
+        return;
+      }
+      setTimeout(typeEffect, 40);
+    }
+  }
+  setTimeout(typeEffect, 600);
+
+  // Render projects
+  const grid = document.getElementById('projects-grid');
+  function renderProjects(category) {
+    const items = projectsData[category] || [];
+    if (items.length === 0) {
+      grid.innerHTML = '<div class="empty-tab">No projects in this category yet</div>';
+      return;
+    }
+    grid.innerHTML = items.map(p => `
+      <a class="project-card" href="https://github.com/pipupip/${p.repo}" target="_blank">
+        <div class="project-icon">${p.icon}</div>
+        <div class="project-info">
+          <div class="project-name">${p.name}</div>
+          <div class="project-desc">${p.desc}</div>
+          <span class="project-tech">${p.tech}</span>
+        </div>
+        <span class="project-arrow">→</span>
+      </a>
+    `).join('');
+  }
+
+  // Project tabs
+  const tabs = document.querySelectorAll('#project-tabs .tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      renderProjects(this.dataset.cat);
+    });
+  });
+  renderProjects('bots');
+
+  // Render services
+  document.getElementById('services-grid').innerHTML = servicesData.map(s => `
+    <div class="service-card">
+      <div class="service-icon">${s.icon}</div>
+      <div class="service-info">
+        <div class="service-name">${s.name}</div>
+        <div class="service-desc">${s.desc}</div>
+      </div>
+      <div class="service-price">${s.price}</div>
+      <a class="btn-order" href="https://t.me/biggesttroll" target="_blank">Order →</a>
+    </div>
+  `).join('');
+
+  // Render contacts
+  document.getElementById('contact-list').innerHTML = contactsData.map(c => `
+    <a class="contact-item" href="${c.href}" target="_blank">
+      <div class="contact-icon">${c.icon}</div>
+      <div class="contact-info">
+        <div class="contact-label">${c.label}</div>
+        <div class="contact-value">${c.value}</div>
+      </div>
+      <span class="contact-action">→</span>
+    </a>
+  `).join('');
+
+  // Tab navigation
+  const tabbarBtns = document.querySelectorAll('.tabbar-btn');
+  const sections = {
+    home: document.getElementById('section-home'),
+    projects: document.getElementById('section-projects'),
+    services: document.getElementById('section-services'),
+    contacts: document.getElementById('section-contacts')
+  };
+  const page = document.getElementById('page');
+
+  function switchSection(name) {
+    Object.keys(sections).forEach(key => {
+      sections[key].classList.toggle('active', key === name);
+    });
+    tabbarBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.section === name);
+    });
+    page.scrollTop = 0;
+  }
+
+  tabbarBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      switchSection(this.dataset.section);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
